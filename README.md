@@ -281,7 +281,7 @@ df -h | grep "/dev/sda1"
 
 ---
 
-# Got it! Here are **specific, practical Bash script examples** for different tasks.  
+# Here are **specific, practical Bash script examples** for different tasks.  
 
 ---
 
@@ -454,5 +454,244 @@ echo "Deleted log files older than 7 days"
 
 ---
 
-# **🔥 Need More Custom Scripts?**
-Let me know what specific task you need automated! 🚀😊
+# Here are some **advanced, deeply detailed Bash scripts** for different real-world use cases.  
+
+---
+
+# **📌 1️⃣ Automated User Account Management**  
+This script **adds users**, sets passwords, and assigns them to a group.  
+
+```bash
+#!/bin/bash
+# Add a new user and set a password
+
+echo "Enter new username:"
+read username
+
+# Check if user exists
+if id "$username" &>/dev/null; then
+    echo "User '$username' already exists!"
+    exit 1
+fi
+
+# Create user
+sudo useradd -m -s /bin/bash "$username"
+echo "User '$username' created!"
+
+# Set password
+echo "Enter password for $username:"
+read -s password
+echo "$username:$password" | sudo chpasswd
+echo "Password set successfully!"
+
+# Add user to sudo group
+sudo usermod -aG sudo "$username"
+echo "User '$username' added to sudo group."
+```
+✅ **Usage**: Run `./add_user.sh`, enter username & password.  
+
+---
+
+# **📌 2️⃣ Automated Server Health Check**  
+This script checks **CPU, memory, and disk usage**, sending alerts if usage is too high.  
+
+```bash
+#!/bin/bash
+# Monitor system health and send alerts
+
+CPU_THRESHOLD=80
+MEM_THRESHOLD=80
+DISK_THRESHOLD=90
+
+# CPU Usage
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'.' -f1)
+
+# Memory Usage
+MEM_USAGE=$(free | awk '/Mem/{printf("%.0f"), $3/$2*100}')
+
+# Disk Usage
+DISK_USAGE=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
+
+# Check CPU
+if [ "$CPU_USAGE" -gt "$CPU_THRESHOLD" ]; then
+    echo "⚠️ High CPU Usage: $CPU_USAGE%"
+fi
+
+# Check Memory
+if [ "$MEM_USAGE" -gt "$MEM_THRESHOLD" ]; then
+    echo "⚠️ High Memory Usage: $MEM_USAGE%"
+fi
+
+# Check Disk
+if [ "$DISK_USAGE" -gt "$DISK_THRESHOLD" ]; then
+    echo "⚠️ Low Disk Space: $DISK_USAGE%"
+fi
+```
+✅ **Usage**: Run `./health_check.sh` to check system health.
+
+---
+
+# **📌 3️⃣ Automated MySQL Database Backup**
+This script **backs up a MySQL database** and saves it with a timestamp.  
+
+```bash
+#!/bin/bash
+DB_NAME="my_database"
+DB_USER="root"
+DB_PASS="yourpassword"
+BACKUP_DIR="/backup"
+
+# Create backup directory
+mkdir -p "$BACKUP_DIR"
+
+# Generate timestamped backup
+BACKUP_FILE="$BACKUP_DIR/$DB_NAME-$(date +%F_%H-%M-%S).sql"
+mysqldump -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" > "$BACKUP_FILE"
+
+# Verify success
+if [ $? -eq 0 ]; then
+    echo "✅ Backup successful: $BACKUP_FILE"
+else
+    echo "❌ Backup failed!"
+fi
+```
+✅ **Usage**: Run `./mysql_backup.sh`.  
+
+---
+
+# **📌 4️⃣ Securely Transfer Files via SCP**
+This script securely **copies files from one server to another** using `scp`.  
+
+```bash
+#!/bin/bash
+# Secure file transfer
+
+REMOTE_USER="user"
+REMOTE_HOST="192.168.1.100"
+REMOTE_DIR="/home/user/backup"
+LOCAL_FILE="/home/user/data.txt"
+
+# Transfer file
+scp "$LOCAL_FILE" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR"
+
+# Check if successful
+if [ $? -eq 0 ]; then
+    echo "✅ File transferred successfully!"
+else
+    echo "❌ File transfer failed!"
+fi
+```
+✅ **Usage**: Run `./secure_transfer.sh` to send files securely.
+
+---
+
+# **📌 5️⃣ Auto Delete Old Backups (Older than 30 Days)**
+This script **removes old backup files** from the system to free up space.  
+
+```bash
+#!/bin/bash
+BACKUP_DIR="/backup"
+DAYS=30
+
+# Delete backups older than 30 days
+find "$BACKUP_DIR" -type f -mtime +$DAYS -exec rm {} \;
+
+echo "✅ Deleted backups older than $DAYS days."
+```
+✅ **Usage**: Run `./delete_old_backups.sh`.
+
+---
+
+# **📌 6️⃣ Real-Time Log File Monitor**  
+This script **monitors a log file** in real-time and **alerts if an error occurs**.  
+
+```bash
+#!/bin/bash
+LOG_FILE="/var/log/syslog"
+
+echo "Monitoring $LOG_FILE for errors..."
+tail -f "$LOG_FILE" | while read line; do
+    if [[ "$line" == *"ERROR"* ]]; then
+        echo "⚠️ ERROR detected: $line"
+    fi
+done
+```
+✅ **Usage**: Run `./log_monitor.sh` to monitor logs.
+
+---
+
+# **📌 7️⃣ Find and Kill High CPU Processes**  
+This script finds **high CPU usage processes** and kills them if needed.  
+
+```bash
+#!/bin/bash
+THRESHOLD=90
+
+echo "Checking for high CPU usage processes..."
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -n 10
+
+# Kill processes above threshold
+echo "Kill processes above $THRESHOLD% CPU? (y/n)"
+read answer
+
+if [[ "$answer" == "y" ]]; then
+    ps -eo pid,%cpu --sort=-%cpu | awk -v threshold=$THRESHOLD '$2>threshold {print $1}' | xargs kill -9
+    echo "Processes killed!"
+else
+    echo "No processes killed."
+fi
+```
+✅ **Usage**: Run `./kill_high_cpu.sh`.
+
+---
+
+# **📌 8️⃣ Automatic File Synchronization**
+This script **syncs files** between two directories using `rsync`.  
+
+```bash
+#!/bin/bash
+SOURCE_DIR="/home/user/Documents"
+DEST_DIR="/home/user/Backup"
+
+# Sync files
+rsync -av --delete "$SOURCE_DIR" "$DEST_DIR"
+
+echo "✅ Files synchronized!"
+```
+✅ **Usage**: Run `./file_sync.sh` to sync files.
+
+---
+
+# **📌 9️⃣ Detect Unauthorized Login Attempts**
+This script scans system logs for **failed login attempts**.  
+
+```bash
+#!/bin/bash
+LOG_FILE="/var/log/auth.log"
+echo "Unauthorized login attempts:"
+grep "Failed password" "$LOG_FILE" | awk '{print $1, $2, $3, $9, $11}'
+```
+✅ **Usage**: Run `./check_failed_logins.sh`.
+
+---
+
+# **📌 🔟 Auto Restart a Crashed Service**
+This script checks if a service is running and **restarts it if it's down**.  
+
+```bash
+#!/bin/bash
+SERVICE="nginx"
+
+if systemctl is-active --quiet "$SERVICE"; then
+    echo "✅ $SERVICE is running."
+else
+    echo "❌ $SERVICE is down! Restarting..."
+    systemctl restart "$SERVICE"
+fi
+```
+✅ **Usage**: Run `./service_monitor.sh`.
+
+---
+
+## **🔥 Need More Advanced Scripts?**
+Let me know **what task** you want automated! 🚀
