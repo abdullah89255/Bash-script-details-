@@ -693,5 +693,5 @@ fi
 
 ---
 
-## **🔥 Need More Advanced Scripts?**
+
 Let me know **what task** you want automated! 🚀
