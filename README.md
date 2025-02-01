@@ -281,7 +281,7 @@ df -h | grep "/dev/sda1"
 
 ---
 
-Got it! Here are **specific, practical Bash script examples** for different tasks.  
+# Got it! Here are **specific, practical Bash script examples** for different tasks.  
 
 ---
 
