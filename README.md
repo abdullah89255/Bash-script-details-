@@ -281,4 +281,178 @@ df -h | grep "/dev/sda1"
 
 ---
 
-## **Do You Need Help with a Specific Bash Script?** 😊
+Got it! Here are **specific, practical Bash script examples** for different tasks.  
+
+---
+
+## **1️⃣ Automated Backup Script**
+This script backs up a directory to another location and appends a timestamp to the backup file.  
+
+```bash
+#!/bin/bash
+# Define variables
+SOURCE_DIR="/home/user/Documents"
+BACKUP_DIR="/home/user/Backup"
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+BACKUP_FILE="backup_$TIMESTAMP.tar.gz"
+
+# Create a backup
+mkdir -p "$BACKUP_DIR"
+tar -czf "$BACKUP_DIR/$BACKUP_FILE" "$SOURCE_DIR"
+
+# Print success message
+echo "Backup completed! File saved as $BACKUP_DIR/$BACKUP_FILE"
+```
+✅ **Usage**: Run `./backup.sh` to create a compressed backup.  
+
+---
+
+## **2️⃣ Check Internet Connectivity**
+This script pings **Google** and checks if the internet is connected.  
+
+```bash
+#!/bin/bash
+ping -c 1 google.com &> /dev/null
+
+if [ $? -eq 0 ]; then
+    echo "Internet is connected ✅"
+else
+    echo "No Internet connection ❌"
+fi
+```
+✅ **Usage**: Run `./check_internet.sh` to check connectivity.
+
+---
+
+## **3️⃣ Rename Multiple Files**
+This script renames all `.txt` files in a folder by adding a prefix (`new_`).  
+
+```bash
+#!/bin/bash
+for file in *.txt; do
+    mv "$file" "new_$file"
+done
+echo "All text files renamed!"
+```
+✅ **Usage**: Place it in a folder with `.txt` files and run `./rename_files.sh`.
+
+---
+
+## **4️⃣ Monitor Disk Space**
+This script checks if disk usage exceeds 80% and alerts the user.  
+
+```bash
+#!/bin/bash
+THRESHOLD=80
+USAGE=$(df -h / | grep "/" | awk '{print $5}' | sed 's/%//')
+
+if [ "$USAGE" -gt "$THRESHOLD" ]; then
+    echo "⚠️ Warning: Disk usage is at $USAGE%!"
+else
+    echo "✅ Disk usage is under control ($USAGE%)"
+fi
+```
+✅ **Usage**: Run `./disk_monitor.sh` to check disk usage.
+
+---
+
+## **5️⃣ Find Large Files**
+This script finds files larger than **100MB** in the current directory.  
+
+```bash
+#!/bin/bash
+find . -type f -size +100M -exec ls -lh {} \;
+```
+✅ **Usage**: Run `./find_large_files.sh` to list large files.
+
+---
+
+## **6️⃣ Automated System Update**
+This script updates the system (Ubuntu/Debian-based).  
+
+```bash
+#!/bin/bash
+echo "Updating system..."
+sudo apt update && sudo apt upgrade -y
+echo "System update complete ✅"
+```
+✅ **Usage**: Run `./update_system.sh` (requires `sudo`).
+
+---
+
+## **7️⃣ Extract and Count Words in a File**
+This script counts occurrences of each word in a given text file.  
+
+```bash
+#!/bin/bash
+echo "Enter filename:"
+read filename
+
+if [ -f "$filename" ]; then
+    cat "$filename" | tr -s ' ' '\n' | sort | uniq -c | sort -nr
+else
+    echo "File not found!"
+fi
+```
+✅ **Usage**: Run `./word_count.sh` and enter a filename.
+
+---
+
+## **8️⃣ CPU Usage Monitor**
+This script continuously monitors CPU usage and alerts if it exceeds 75%.  
+
+```bash
+#!/bin/bash
+while true; do
+    CPU_LOAD=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'.' -f1)
+    if [ "$CPU_LOAD" -gt 75 ]; then
+        echo "⚠️ CPU usage high: $CPU_LOAD%"
+    else
+        echo "✅ CPU usage normal: $CPU_LOAD%"
+    fi
+    sleep 5
+done
+```
+✅ **Usage**: Run `./cpu_monitor.sh` to monitor CPU usage.
+
+---
+
+## **9️⃣ Automate File Backup with Cron**
+This script automatically backs up a directory every day using **cron jobs**.  
+
+### **Step 1: Create the script**
+```bash
+#!/bin/bash
+tar -czf /home/user/Backup/backup_$(date +%F).tar.gz /home/user/Documents
+```
+Save it as `daily_backup.sh`, then make it executable:
+```bash
+chmod +x daily_backup.sh
+```
+
+### **Step 2: Schedule with Cron**
+Run:
+```bash
+crontab -e
+```
+Add this line:
+```
+0 2 * * * /home/user/daily_backup.sh
+```
+This runs the script **every day at 2 AM**.
+
+---
+
+## **🔟 Delete Old Log Files (Older than 7 Days)**
+```bash
+#!/bin/bash
+LOG_DIR="/var/log"
+find "$LOG_DIR" -type f -name "*.log" -mtime +7 -exec rm {} \;
+echo "Deleted log files older than 7 days"
+```
+✅ **Usage**: Run `./delete_logs.sh` to clean up old logs.
+
+---
+
+# **🔥 Need More Custom Scripts?**
+Let me know what specific task you need automated! 🚀😊
